@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BKH Online Cycle — Technical Documentation</title>
+    <meta name="description"
+        content="Technical documentation for the BKH Online Cycle project: Odoo e-Learning & Website module customizations by 3S Smart Solutions.">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        /* ── Reset ── */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #07080a;
+            --bg-secondary: #0e1117;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --text-primary: #f0f2f5;
+            --text-secondary: #8b95a5;
+            --accent: #6c5ce7;
+            --accent-glow: rgba(108, 92, 231, 0.35);
+            --accent2: #00cec9;
+            --accent2-glow: rgba(0, 206, 201, 0.25);
+            --gradient: linear-gradient(135deg, #6c5ce7, #a29bfe, #00cec9);
+            --border: rgba(255, 255, 255, 0.06);
+            --radius: 16px;
+            --font-body: 'Inter', sans-serif;
+            --font-heading: 'Space Grotesk', sans-serif;
+            --font-ar: 'Noto Sans Arabic', 'Inter', sans-serif;
+            --orange: #f97316;
+            --orange-glow: rgba(249, 115, 22, 0.25);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.7;
+        }
+
+        html[lang="ar"] body,
+        html[lang="ar"] * {
+            font-family: var(--font-ar);
+        }
+
+        html[lang="ar"] .section-title,
+        html[lang="ar"] .hero h1,
+        html[lang="ar"] .logo {
+            font-family: var(--font-ar);
+        }
+
+        /* ── Ambient BG ── */
+        .ambient-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.45;
+        }
+
+        .orb-1 {
+            width: 600px;
+            height: 600px;
+            background: var(--accent-glow);
+            top: -200px;
+            left: -100px;
+            animation: drift 18s ease-in-out infinite alternate;
+        }
+
+        .orb-2 {
+            width: 500px;
+            height: 500px;
+            background: var(--accent2-glow);
+            bottom: -150px;
+            right: -100px;
+            animation: drift 22s ease-in-out infinite alternate-reverse;
+        }
+
+        .orb-3 {
+            width: 350px;
+            height: 350px;
+            background: var(--orange-glow);
+            top: 50%;
+            left: 50%;
+            animation: drift 15s ease-in-out infinite alternate;
+        }
+
+        @keyframes drift {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            50% {
+                transform: translate(60px, -40px) scale(1.1);
+            }
+
+            100% {
+                transform: translate(-30px, 50px) scale(0.95);
+            }
+        }
+
+        /* ── Navigation ── */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 48px;
+            z-index: 100;
+            backdrop-filter: blur(20px);
+            background: rgba(7, 8, 10, 0.7);
+            border-bottom: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            padding: 12px 48px;
+            background: rgba(7, 8, 10, 0.9);
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: 1.4rem;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-divider {
+            width: 1px;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .nav-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.82rem;
+            font-weight: 500;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .lang-toggle {
+            padding: 8px 18px;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.82rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+
+        .lang-toggle:hover {
+            border-color: var(--accent);
+            color: var(--text-primary);
+            background: rgba(108, 92, 231, 0.1);
+        }
+
+        /* ── Section ── */
+        section {
+            position: relative;
+            z-index: 1;
+            padding: 100px 48px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent);
+            margin-bottom: 14px;
+        }
+
+        .section-label::before {
+            content: '';
+            width: 28px;
+            height: 2px;
+            background: var(--gradient);
+        }
+
+        html[dir="rtl"] .section-label::before {
+            display: none;
+        }
+
+        html[dir="rtl"] .section-label::after {
+            content: '';
+            width: 28px;
+            height: 2px;
+            background: var(--gradient);
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+            font-weight: 700;
+            margin-bottom: 16px;
+            line-height: 1.25;
+        }
+
+        .section-desc {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            max-width: 640px;
+            margin-bottom: 48px;
+            line-height: 1.8;
+        }
+
+        /* ── Hero ── */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding-top: 100px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 24px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            margin-bottom: 28px;
+            backdrop-filter: blur(10px);
+            animation: fadeUp 0.8s ease both;
+        }
+
+        .hero-badge .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--orange);
+            animation: pulse 2s infinite;
+        }
+
+        .hero h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(2.4rem, 5vw, 4rem);
+            font-weight: 800;
+            line-height: 1.15;
+            max-width: 800px;
+            margin-bottom: 20px;
+            animation: fadeUp 0.8s ease 0.15s both;
+        }
+
+        .hero h1 .gradient-text {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero .sub {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            max-width: 540px;
+            margin-bottom: 40px;
+            animation: fadeUp 0.8s ease 0.3s both;
+        }
+
+        .meta-bar {
+            display: flex;
+            gap: 48px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 48px;
+            padding-top: 48px;
+            border-top: 1px solid var(--border);
+            animation: fadeUp 0.8s ease 0.5s both;
+        }
+
+        .meta-item {
+            text-align: center;
+        }
+
+        .meta-value {
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .meta-label {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        /* ── Feature Card ── */
+        .feature-card {
+            padding: 40px 36px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            margin-bottom: 32px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+            transform-origin: left;
+        }
+
+        html[dir="rtl"] .feature-card::before {
+            transform-origin: right;
+        }
+
+        .feature-card:hover {
+            border-color: rgba(108, 92, 231, 0.3);
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .feature-num {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(108, 92, 231, 0.18), rgba(0, 206, 201, 0.12));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent2);
+            flex-shrink: 0;
+        }
+
+        .feature-title {
+            font-family: var(--font-heading);
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .feature-module {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-left: auto;
+        }
+
+        html[dir="rtl"] .feature-module {
+            margin-left: 0;
+            margin-right: auto;
+        }
+
+        .mod-elearning {
+            background: rgba(108, 92, 231, 0.15);
+            color: #a29bfe;
+        }
+
+        .mod-inventory {
+            background: rgba(249, 115, 22, 0.15);
+            color: #fb923c;
+        }
+
+        .mod-website {
+            background: rgba(0, 206, 201, 0.15);
+            color: #00cec9;
+        }
+
+        .feature-body {
+            color: var(--text-secondary);
+            font-size: 0.92rem;
+            line-height: 1.8;
+            margin-bottom: 24px;
+        }
+
+        .feature-body ul {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+
+        html[dir="rtl"] .feature-body ul {
+            padding-left: 0;
+            padding-right: 20px;
+        }
+
+        .feature-body li {
+            margin-bottom: 6px;
+        }
+
+        .feature-body strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* ── Screenshot ── */
+        .screenshot-wrapper {
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            position: relative;
+        }
+
+        .screenshot-wrapper img {
+            width: 100%;
+            display: block;
+            transition: transform 0.4s ease;
+        }
+
+        .screenshot-wrapper:hover img {
+            transform: scale(1.02);
+        }
+
+        .screenshot-caption {
+            padding: 12px 20px;
+            background: rgba(14, 17, 23, 0.9);
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .screenshot-caption .cap-icon {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent2);
+            flex-shrink: 0;
+        }
+
+        /* ── Website Gallery ── */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .gallery-grid .screenshot-wrapper:first-child {
+            grid-column: 1 / -1;
+        }
+
+        /* ── Info Table ── */
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 24px;
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        .info-table th,
+        .info-table td {
+            padding: 14px 20px;
+            text-align: left;
+            font-size: 0.88rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        html[dir="rtl"] .info-table th,
+        html[dir="rtl"] .info-table td {
+            text-align: right;
+        }
+
+        .info-table th {
+            font-weight: 600;
+            color: var(--accent);
+            background: rgba(108, 92, 231, 0.06);
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .info-table td {
+            color: var(--text-secondary);
+        }
+
+        .info-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .info-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* ── Status Badge ── */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 14px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-hold {
+            background: rgba(251, 191, 36, 0.12);
+            color: #fbbf24;
+        }
+
+        .status-hold::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #fbbf24;
+        }
+
+        /* ── Footer ── */
+        footer {
+            position: relative;
+            z-index: 1;
+            border-top: 1px solid var(--border);
+            padding: 40px 48px;
+            text-align: center;
+        }
+
+        .footer-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .footer-brand {
+            font-family: var(--font-heading);
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .footer-copy {
+            font-size: 0.8rem;
+            color: rgba(139, 149, 165, 0.6);
+        }
+
+        /* ── Animations ── */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ── Divider ── */
+        .section-divider {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border), transparent);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            nav {
+                padding: 14px 20px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .nav-divider,
+            .nav-subtitle {
+                display: none;
+            }
+
+            section {
+                padding: 60px 20px;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .meta-bar {
+                gap: 24px;
+            }
+
+            .feature-header {
+                flex-wrap: wrap;
+            }
+
+            .feature-module {
+                margin-left: 0;
+            }
+
+            .footer-inner {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        /* ── RTL Adjustments ── */
+        html[dir="rtl"] .nav-links {
+            direction: rtl;
+        }
+
+        /* ── Print ── */
+        @media print {
+
+            .ambient-orb,
+            nav,
+            .lang-toggle {
+                display: none !important;
+            }
+
+            body {
+                background: #fff;
+                color: #111;
+            }
+
+            .feature-card {
+                border: 1px solid #ddd;
+                background: #fafafa;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Ambient Orbs -->
+    <div class="ambient-orb orb-1"></div>
+    <div class="ambient-orb orb-2"></div>
+    <div class="ambient-orb orb-3"></div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-left">
+            <div class="logo" data-en="3S Smart Solutions" data-ar="3S سمارت سوليوشنز">3S Smart Solutions</div>
+            <div class="nav-divider"></div>
+            <span class="nav-subtitle" data-en="BKH Online Cycle Documentation"
+                data-ar="توثيق الدورة أونلاين - بيت الخياطة">BKH Online Cycle Documentation</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#elearning" data-en="E-Learning" data-ar="التعليم الإلكتروني">E-Learning</a></li>
+            <li><a href="#inventory" data-en="Inventory" data-ar="المخزون">Inventory</a></li>
+            <li><a href="#website" data-en="Website" data-ar="الموقع الإلكتروني">Website</a></li>
+            <li>
+                <button class="lang-toggle" id="langToggle" onclick="toggleLang()">العربية</button>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-badge">
+            <span class="dot"></span>
+            <span data-en="Project Documentation — On Hold" data-ar="توثيق المشروع — موقوف مؤقتاً">Project Documentation
+                — On Hold</span>
+        </div>
+        <h1>
+            <span data-en="BKH" data-ar="بيت الخياطة">BKH</span>
+            <span class="gradient-text" data-en="Online Cycle" data-ar="الدورة أونلاين">Online Cycle</span>
+        </h1>
+        <p class="sub"
+            data-en="Technical documentation for the Odoo e-Learning module, inventory customizations, and website implementation for Bayt Al-Khyata (BKH)."
+            data-ar="التوثيق التقني لوحدة التعليم الإلكتروني في أودو، تخصيصات المخزون، وتنفيذ الموقع الإلكتروني لبيت الخياطة.">
+            Technical documentation for the Odoo e-Learning module, inventory customizations, and website implementation
+            for Bayt Al-Khyata (BKH).
+        </p>
+        <span class="status-badge status-hold" data-en="⏸ Work on hold for further notice"
+            data-ar="⏸ العمل موقوف حتى إشعار آخر">⏸ Work on hold for further notice</span>
+
+        <div class="meta-bar">
+            <div class="meta-item">
+                <div class="meta-value" data-en="BKH" data-ar="بيت الخياطة">BKH</div>
+                <div class="meta-label" data-en="Client" data-ar="العميل">Client</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-value" data-en="Odoo 17" data-ar="أودو 17">Odoo 17</div>
+                <div class="meta-label" data-en="Platform" data-ar="المنصة">Platform</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-value" data-en="E-Learning + Website" data-ar="التعليم الإلكتروني + الموقع">E-Learning
+                    + Website</div>
+                <div class="meta-label" data-en="Modules" data-ar="الوحدات">Modules</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-value" data-en="Yousif Farrag" data-ar="يوسف فراج">Yousif Farrag</div>
+                <div class="meta-label" data-en="Prepared By" data-ar="إعداد">Prepared By</div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ═══════════════ E-LEARNING MODULE ═══════════════ -->
+    <section id="elearning">
+        <div class="reveal">
+            <span class="section-label" data-en="Module Customization" data-ar="تخصيص الوحدة">Module
+                Customization</span>
+            <h2 class="section-title" data-en="E-Learning Module" data-ar="وحدة التعليم الإلكتروني">E-Learning Module
+            </h2>
+            <p class="section-desc"
+                data-en="Custom fields and enhancements added to the default Odoo e-Learning module to support BKH's online cycle workflow."
+                data-ar="الحقول المخصصة والتحسينات المضافة إلى وحدة التعليم الإلكتروني الافتراضية في أودو لدعم سير عمل الدورة أونلاين لبيت الخياطة.">
+                Custom fields and enhancements added to the default Odoo e-Learning module to support BKH's online cycle
+                workflow.
+            </p>
+        </div>
+
+        <!-- Feature 1: Instructor Field -->
+        <div class="feature-card reveal">
+            <div class="feature-header">
+                <div class="feature-num">01</div>
+                <div class="feature-title" data-en="Instructor Field" data-ar="حقل المدرّب">Instructor Field</div>
+                <span class="feature-module mod-elearning" data-en="E-Learning"
+                    data-ar="التعليم الإلكتروني">E-Learning</span>
+            </div>
+            <div class="feature-body">
+                <p data-en="A new <strong>Instructor</strong> field has been added to the course form under the <strong>Options</strong> tab → <strong>Course</strong> section. This field is a Many2one reference to <code>res.partner</code> with a domain filter that restricts the selection to contacts with the type <strong>Teacher</strong> only."
+                    data-ar="تمت إضافة حقل <strong>المدرّب</strong> جديد إلى نموذج الدورة تحت تبويب <strong>الخيارات</strong> → قسم <strong>الدورة</strong>. هذا الحقل هو مرجع Many2one إلى <code>res.partner</code> مع فلتر نطاق يقيّد الاختيار على جهات الاتصال من نوع <strong>معلم</strong> فقط.">
+                    A new <strong>Instructor</strong> field has been added to the course form under the
+                    <strong>Options</strong> tab → <strong>Course</strong> section. This field is a Many2one reference
+                    to <code>res.partner</code> with a domain filter that restricts the selection to contacts with the
+                    type <strong>Teacher</strong> only.
+                </p>
+                <ul>
+                    <li data-en="<strong>Model:</strong> <code>slide.channel</code>"
+                        data-ar="<strong>الموديل:</strong> <code>slide.channel</code>"><strong>Model:</strong>
+                        <code>slide.channel</code></li>
+                    <li data-en="<strong>Field Type:</strong> Many2one → <code>res.partner</code>"
+                        data-ar="<strong>نوع الحقل:</strong> Many2one → <code>res.partner</code>"><strong>Field
+                            Type:</strong> Many2one → <code>res.partner</code></li>
+                    <li data-en="<strong>Domain:</strong> Contacts with type = Teacher"
+                        data-ar="<strong>النطاق:</strong> جهات الاتصال من نوع = معلم"><strong>Domain:</strong> Contacts
+                        with type = Teacher</li>
+                    <li data-en="<strong>Location:</strong> Options tab → Course section"
+                        data-ar="<strong>الموقع:</strong> تبويب الخيارات → قسم الدورة"><strong>Location:</strong>
+                        Options tab → Course section</li>
+                </ul>
+            </div>
+            <div class="screenshot-wrapper">
+                <img src="src/image.png" alt="Instructor field in eLearning course form">
+                <div class="screenshot-caption">
+                    <span class="cap-icon"></span>
+                    <span data-en="Options tab showing the new Instructor field (highlighted) under the Course section"
+                        data-ar="تبويب الخيارات يعرض حقل المدرّب الجديد (المُبرز) تحت قسم الدورة">Options tab showing
+                        the new Instructor field (highlighted) under the Course section</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature 2: Sessions Count & Duration -->
+        <div class="feature-card reveal">
+            <div class="feature-header">
+                <div class="feature-num">02</div>
+                <div class="feature-title" data-en="Total Sessions & Duration (Computed)"
+                    data-ar="إجمالي الجلسات والمدة (محسوبة)">Total Sessions & Duration (Computed)</div>
+                <span class="feature-module mod-elearning" data-en="E-Learning"
+                    data-ar="التعليم الإلكتروني">E-Learning</span>
+            </div>
+            <div class="feature-body">
+                <p data-en="Two new <strong>computed fields</strong> have been added to the course form under the <strong>Options</strong> tab → <strong>Display</strong> section:"
+                    data-ar="تمت إضافة <strong>حقلين محسوبين</strong> جديدين إلى نموذج الدورة تحت تبويب <strong>الخيارات</strong> → قسم <strong>العرض</strong>:">
+                    Two new <strong>computed fields</strong> have been added to the course form under the
+                    <strong>Options</strong> tab → <strong>Display</strong> section:
+                </p>
+                <table class="info-table">
+                    <tr>
+                        <th data-en="Field" data-ar="الحقل">Field</th>
+                        <th data-en="Description" data-ar="الوصف">Description</th>
+                        <th data-en="Logic" data-ar="المنطق">Logic</th>
+                    </tr>
+                    <tr>
+                        <td data-en="<strong>Sessions Count</strong>" data-ar="<strong>عدد الجلسات</strong>">
+                            <strong>Sessions Count</strong></td>
+                        <td data-en="Counts only <em>content</em> lines (excludes sections)"
+                            data-ar="يحسب سطور <em>المحتوى</em> فقط (يستثني الأقسام)">Counts only <em>content</em> lines
+                            (excludes sections)</td>
+                        <td data-en="Computed from <code>slide.slide</code> content records"
+                            data-ar="محسوب من سجلات محتوى <code>slide.slide</code>">Computed from
+                            <code>slide.slide</code> content records</td>
+                    </tr>
+                    <tr>
+                        <td data-en="<strong>Duration</strong>" data-ar="<strong>المدة</strong>">
+                            <strong>Duration</strong></td>
+                        <td data-en="Sums the duration of all content lines" data-ar="يجمع مدة جميع سطور المحتوى">Sums
+                            the duration of all content lines</td>
+                        <td data-en="Auto-populated in the Duration field" data-ar="يُملأ تلقائياً في حقل المدة">
+                            Auto-populated in the Duration field</td>
+                    </tr>
+                </table>
+                <br>
+                <p data-en="These fields automatically calculate as content is added to the course, providing a live summary of the total sessions and total duration."
+                    data-ar="تُحسب هذه الحقول تلقائياً عند إضافة المحتوى إلى الدورة، مما يوفر ملخصاً مباشراً لإجمالي الجلسات والمدة الكلية.">
+                    These fields automatically calculate as content is added to the course, providing a live summary of
+                    the total sessions and total duration.
+                </p>
+            </div>
+            <div class="screenshot-wrapper">
+                <img src="src/image1.png" alt="Sessions Count and Duration computed fields">
+                <div class="screenshot-caption">
+                    <span class="cap-icon"></span>
+                    <span
+                        data-en="Display section showing Sessions Count (6) and Duration (01:03) — both auto-computed from content lines"
+                        data-ar="قسم العرض يُظهر عدد الجلسات (6) والمدة (01:03) — كلاهما محسوب تلقائياً من سطور المحتوى">Display
+                        section showing Sessions Count (6) and Duration (01:03) — both auto-computed from content
+                        lines</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ═══════════════ INVENTORY MODULE ═══════════════ -->
+    <section id="inventory">
+        <div class="reveal">
+            <span class="section-label" data-en="Module Customization" data-ar="تخصيص الوحدة">Module
+                Customization</span>
+            <h2 class="section-title" data-en="Inventory Module" data-ar="وحدة المخزون">Inventory Module</h2>
+            <p class="section-desc"
+                data-en="Enhancements to the product form to support the online cycle's combo products and automated actions."
+                data-ar="تحسينات على نموذج المنتج لدعم المنتجات المجمّعة للدورة أونلاين والإجراءات التلقائية.">
+                Enhancements to the product form to support the online cycle's combo products and automated actions.
+            </p>
+        </div>
+
+        <!-- Feature 3: Combo Product - Create on Order -->
+        <div class="feature-card reveal">
+            <div class="feature-header">
+                <div class="feature-num">03</div>
+                <div class="feature-title" data-en="Combo Product — Create on Order Actions"
+                    data-ar="المنتج المجمّع — إجراءات الإنشاء عند الطلب">Combo Product — Create on Order Actions</div>
+                <span class="feature-module mod-inventory" data-en="Inventory" data-ar="المخزون">Inventory</span>
+            </div>
+            <div class="feature-body">
+                <p data-en="Inside the <strong>Inventory</strong> module, the <strong>Product Type: Combo</strong> has been enhanced with the ability to trigger automated actions when an order is placed. The <strong>Create on Order</strong> field now supports two new action types:"
+                    data-ar="داخل وحدة <strong>المخزون</strong>، تم تحسين <strong>نوع المنتج: مجمّع (Combo)</strong> بإمكانية تشغيل إجراءات تلقائية عند تقديم الطلب. يدعم حقل <strong>الإنشاء عند الطلب</strong> الآن نوعين جديدين من الإجراءات:">
+                    Inside the <strong>Inventory</strong> module, the <strong>Product Type: Combo</strong> has been
+                    enhanced with the ability to trigger automated actions when an order is placed. The <strong>Create
+                        on Order</strong> field now supports two new action types:
+                </p>
+                <ul>
+                    <li data-en="<strong>Course Access</strong> — Automatically grants the customer access to an e-Learning course"
+                        data-ar="<strong>الوصول للدورة</strong> — يمنح العميل تلقائياً الوصول إلى دورة تعليم إلكتروني">
+                        <strong>Course Access</strong> — Automatically grants the customer access to an e-Learning
+                        course</li>
+                    <li data-en="<strong>Event Registration</strong> — Automatically registers the customer for an event"
+                        data-ar="<strong>تسجيل في الفعالية</strong> — يسجّل العميل تلقائياً في فعالية"><strong>Event
+                            Registration</strong> — Automatically registers the customer for an event</li>
+                </ul>
+                <br>
+                <p data-en="This allows BKH to sell combo products that bundle course access and event registration together as a single purchasable item."
+                    data-ar="يتيح هذا لبيت الخياطة بيع منتجات مجمّعة تجمع الوصول للدورة وتسجيل الفعالية معاً كعنصر واحد قابل للشراء.">
+                    This allows BKH to sell combo products that bundle course access and event registration together as
+                    a single purchasable item.
+                </p>
+            </div>
+            <div class="screenshot-wrapper">
+                <img src="src/image copy.png" alt="Combo product with Create on Order field">
+                <div class="screenshot-caption">
+                    <span class="cap-icon"></span>
+                    <span
+                        data-en="Product form — Combo type with the Create on Order field (highlighted) supporting course access and event registration actions"
+                        data-ar="نموذج المنتج — نوع مجمّع مع حقل الإنشاء عند الطلب (المُبرز) يدعم إجراءات الوصول للدورة وتسجيل الفعالية">Product
+                        form — Combo type with the Create on Order field (highlighted) supporting course access and
+                        event registration actions</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ═══════════════ WEBSITE MODULE ═══════════════ -->
+    <section id="website">
+        <div class="reveal">
+            <span class="section-label" data-en="Website Implementation" data-ar="تنفيذ الموقع الإلكتروني">Website
+                Implementation</span>
+            <h2 class="section-title" data-en="Website Module" data-ar="وحدة الموقع الإلكتروني">Website Module</h2>
+            <p class="section-desc"
+                data-en="The website was implemented using default Odoo Website sections and building blocks. No custom development was made to the website module itself — all sections and implementation were done with standard Odoo tools. Many of the customizations are tailored for the client's mobile application needs."
+                data-ar="تم تنفيذ الموقع الإلكتروني باستخدام أقسام وكتل بناء موقع أودو الافتراضية. لم يتم إجراء أي تطوير مخصص لوحدة الموقع نفسها — جميع الأقسام والتنفيذ تم باستخدام أدوات أودو القياسية. العديد من التخصيصات مصممة لاحتياجات التطبيق المحمول للعميل.">
+                The website was implemented using default Odoo Website sections and building blocks. No custom
+                development was made to the website module itself — all sections and implementation were done with
+                standard Odoo tools. Many of the customizations are tailored for the client's mobile application needs.
+            </p>
+        </div>
+
+        <!-- Feature 4: Website Sections -->
+        <div class="feature-card reveal">
+            <div class="feature-header">
+                <div class="feature-num">04</div>
+                <div class="feature-title" data-en="Website Sections & Pages" data-ar="أقسام وصفحات الموقع">Website
+                    Sections & Pages</div>
+                <span class="feature-module mod-website" data-en="Website" data-ar="الموقع">Website</span>
+            </div>
+            <div class="feature-body">
+                <p data-en="The following key areas of the website were configured using Odoo's default website builder:"
+                    data-ar="تم تكوين المناطق الرئيسية التالية من الموقع باستخدام منشئ مواقع أودو الافتراضي:">
+                    The following key areas of the website were configured using Odoo's default website builder:
+                </p>
+                <ul>
+                    <li data-en="<strong>Homepage</strong> — Hero section with App Store / Play Store download buttons and BKH branding"
+                        data-ar="<strong>الصفحة الرئيسية</strong> — قسم البطل مع أزرار تحميل App Store / Play Store وعلامة بيت الخياطة التجارية">
+                        <strong>Homepage</strong> — Hero section with App Store / Play Store download buttons and BKH
+                        branding</li>
+                    <li data-en="<strong>Courses Carousel</strong> — A dynamic carousel showcasing available courses with categories, descriptions, and durations"
+                        data-ar="<strong>كاروسيل الدورات</strong> — كاروسيل ديناميكي يعرض الدورات المتاحة مع الفئات والأوصاف والمدد">
+                        <strong>Courses Carousel</strong> — A dynamic carousel showcasing available courses with
+                        categories, descriptions, and durations</li>
+                    <li data-en="<strong>Courses Page</strong> — Course listing with popularity ranking, levels, session count, and gamification features (ranks & badges)"
+                        data-ar="<strong>صفحة الدورات</strong> — قائمة الدورات مع ترتيب الشعبية والمستويات وعدد الجلسات وميزات التلعيب (الرتب والشارات)">
+                        <strong>Courses Page</strong> — Course listing with popularity ranking, levels, session count,
+                        and gamification features (ranks & badges)</li>
+                    <li data-en="<strong>Footer</strong> — Social media links (Facebook, Instagram, TikTok, YouTube), contact info, and quick navigation"
+                        data-ar="<strong>التذييل</strong> — روابط وسائل التواصل الاجتماعي (فيسبوك، إنستغرام، تيك توك، يوتيوب)، معلومات الاتصال، والتنقل السريع">
+                        <strong>Footer</strong> — Social media links (Facebook, Instagram, TikTok, YouTube), contact
+                        info, and quick navigation</li>
+                </ul>
+                <br>
+                <p data-en="<em>Note: Some website customizations may appear irrelevant to Odoo's default behavior as they were specifically tailored for the client's mobile application requirements.</em>"
+                    data-ar="<em>ملاحظة: قد تبدو بعض تخصيصات الموقع غير ذات صلة بالسلوك الافتراضي لأودو حيث تم تصميمها خصيصاً لمتطلبات التطبيق المحمول للعميل.</em>">
+                    <em>Note: Some website customizations may appear irrelevant to Odoo's default behavior as they were
+                        specifically tailored for the client's mobile application requirements.</em>
+                </p>
+            </div>
+
+            <div class="gallery-grid">
+                <div class="screenshot-wrapper">
+                    <img src="src/website src/image.png" alt="BKH Website Homepage">
+                    <div class="screenshot-caption">
+                        <span class="cap-icon"></span>
+                        <span data-en="Homepage — App download section with BKH branding"
+                            data-ar="الصفحة الرئيسية — قسم تحميل التطبيق مع علامة بيت الخياطة التجارية">Homepage — App
+                            download section with BKH branding</span>
+                    </div>
+                </div>
+                <div class="screenshot-wrapper">
+                    <img src="src/website src/image copy.png" alt="Courses Carousel">
+                    <div class="screenshot-caption">
+                        <span class="cap-icon"></span>
+                        <span data-en="Courses carousel — categories, descriptions & durations"
+                            data-ar="كاروسيل الدورات — الفئات والأوصاف والمدد">Courses carousel — categories,
+                            descriptions & durations</span>
+                    </div>
+                </div>
+                <div class="screenshot-wrapper">
+                    <img src="src/website src/image copy 3.png" alt="Courses Page">
+                    <div class="screenshot-caption">
+                        <span class="cap-icon"></span>
+                        <span data-en="Courses page — levels, sessions, and gamification"
+                            data-ar="صفحة الدورات — المستويات والجلسات والتلعيب">Courses page — levels, sessions, and
+                            gamification</span>
+                    </div>
+                </div>
+                <div class="screenshot-wrapper">
+                    <img src="src/website src/image copy 2.png" alt="Footer Section">
+                    <div class="screenshot-caption">
+                        <span class="cap-icon"></span>
+                        <span data-en="Footer — social links, contacts & quick navigation"
+                            data-ar="التذييل — روابط التواصل الاجتماعي والاتصال والتنقل السريع">Footer — social links,
+                            contacts & quick navigation</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-brand" data-en="3S Smart Solutions" data-ar="3S سمارت سوليوشنز">3S Smart Solutions</div>
+            <div class="footer-copy" data-en="Prepared by Yousif Farrag · BKH Online Cycle · 2025"
+                data-ar="إعداد يوسف فراج · الدورة أونلاين بيت الخياطة · 2025">Prepared by Yousif Farrag · BKH Online
+                Cycle · 2025</div>
+        </div>
+    </footer>
+
+    <script>
+        // ── Scroll reveal ──
+        const revealEls = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+        revealEls.forEach(el => observer.observe(el));
+
+        // ── Nav scroll effect ──
+        window.addEventListener('scroll', () => {
+            document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
+        });
+
+        // ── Language Toggle ──
+        let currentLang = 'en';
+
+        function toggleLang() {
+            currentLang = currentLang === 'en' ? 'ar' : 'en';
+            const html = document.documentElement;
+            html.lang = currentLang;
+            html.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+
+            // Update toggle button text
+            document.getElementById('langToggle').textContent = currentLang === 'ar' ? 'English' : 'العربية';
+
+            // Update all translatable elements
+            document.querySelectorAll('[data-' + currentLang + ']').forEach(el => {
+                const val = el.getAttribute('data-' + currentLang);
+                if (val) {
+                    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                        el.placeholder = val;
+                    } else {
+                        el.innerHTML = val;
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>
