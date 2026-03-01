@@ -593,11 +593,100 @@
 
         .status-hold::before {
             content: '';
+        }
+
+        /* ── Roadmap / Upcoming ── */
+        .roadmap-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .roadmap-card {
+            padding: 32px 28px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .roadmap-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: var(--gradient);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        html[dir="rtl"] .roadmap-card::before {
+            left: auto;
+            right: 0;
+        }
+
+        .roadmap-card:hover {
+            border-color: rgba(108, 92, 231, 0.3);
+            transform: translateY(-4px);
+        }
+
+        .roadmap-card:hover::before {
+            opacity: 1;
+        }
+
+        .roadmap-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(249, 115, 22, 0.1));
+            font-family: var(--font-heading);
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #fbbf24;
+            margin-bottom: 16px;
+        }
+
+        .roadmap-card h4 {
+            font-family: var(--font-heading);
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .roadmap-card p {
+            color: var(--text-secondary);
+            font-size: 0.88rem;
+            line-height: 1.7;
+        }
+
+        .status-upcoming {
+            background: rgba(108, 92, 231, 0.12);
+            color: #a29bfe;
+        }
+
+        .status-upcoming::before {
+            content: '';
             width: 6px;
             height: 6px;
             border-radius: 50%;
-            background: #fbbf24;
+            background: #a29bfe;
         }
+
+        @media (max-width: 768px) {
+            .roadmap-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* placeholder removed */
 
         /* ── Footer ── */
         footer {
@@ -754,7 +843,8 @@
     <!-- Navigation -->
     <nav id="navbar">
         <div class="nav-left">
-            <div class="logo" data-en="Prepared by Yousif Frrag" data-ar="Prepared by Yousif Frrag">Prepared by Yousif Frrag</div>
+            <div class="logo" data-en="Prepared by Yousif Frrag" data-ar="Prepared by Yousif Frrag">Prepared by Yousif
+                Frrag</div>
             <div class="nav-divider"></div>
             <span class="nav-subtitle" data-en="BKH Online Cycle Documentation"
                 data-ar="BKH Online Cycle Documentation">BKH Online Cycle Documentation</span>
@@ -763,6 +853,7 @@
             <li><a href="#elearning" data-en="E-Learning" data-ar="التعليم الإلكتروني">E-Learning</a></li>
             <li><a href="#inventory" data-en="Inventory" data-ar="المخزون">Inventory</a></li>
             <li><a href="#website" data-en="Website" data-ar="الموقع الإلكتروني">Website</a></li>
+            <li><a href="#upcoming" data-en="Upcoming" data-ar="القادم">Upcoming</a></li>
             <li>
                 <button class="lang-toggle" id="langToggle" onclick="toggleLang()">العربية</button>
             </li>
@@ -846,7 +937,8 @@
                 <ul>
                     <li data-en="<strong>Model:</strong> <code>slide.channel</code>"
                         data-ar="<strong>الموديل:</strong> <code>slide.channel</code>"><strong>Model:</strong>
-                        <code>slide.channel</code></li>
+                        <code>slide.channel</code>
+                    </li>
                     <li data-en="<strong>Field Type:</strong> Many2one → <code>res.partner</code>"
                         data-ar="<strong>نوع الحقل:</strong> Many2one → <code>res.partner</code>"><strong>Field
                             Type:</strong> Many2one → <code>res.partner</code></li>
@@ -892,17 +984,20 @@
                     </tr>
                     <tr>
                         <td data-en="<strong>Sessions Count</strong>" data-ar="<strong>عدد الجلسات</strong>">
-                            <strong>Sessions Count</strong></td>
+                            <strong>Sessions Count</strong>
+                        </td>
                         <td data-en="Counts only <em>content</em> lines (excludes sections)"
                             data-ar="يحسب سطور <em>المحتوى</em> فقط (يستثني الأقسام)">Counts only <em>content</em> lines
                             (excludes sections)</td>
                         <td data-en="Computed from <code>slide.slide</code> content records"
                             data-ar="محسوب من سجلات محتوى <code>slide.slide</code>">Computed from
-                            <code>slide.slide</code> content records</td>
+                            <code>slide.slide</code> content records
+                        </td>
                     </tr>
                     <tr>
                         <td data-en="<strong>Duration</strong>" data-ar="<strong>المدة</strong>">
-                            <strong>Duration</strong></td>
+                            <strong>Duration</strong>
+                        </td>
                         <td data-en="Sums the duration of all content lines" data-ar="يجمع مدة جميع سطور المحتوى">Sums
                             the duration of all content lines</td>
                         <td data-en="Auto-populated in the Duration field" data-ar="يُملأ تلقائياً في حقل المدة">
@@ -964,7 +1059,8 @@
                     <li data-en="<strong>Course Access</strong> — Automatically grants the customer access to an e-Learning course"
                         data-ar="<strong>الوصول للدورة</strong> — يمنح العميل تلقائياً الوصول إلى دورة تعليم إلكتروني">
                         <strong>Course Access</strong> — Automatically grants the customer access to an e-Learning
-                        course</li>
+                        course
+                    </li>
                     <li data-en="<strong>Event Registration</strong> — Automatically registers the customer for an event"
                         data-ar="<strong>تسجيل في الفعالية</strong> — يسجّل العميل تلقائياً في فعالية"><strong>Event
                             Registration</strong> — Automatically registers the customer for an event</li>
@@ -1024,19 +1120,23 @@
                     <li data-en="<strong>Homepage</strong> — Hero section with App Store / Play Store download buttons and BKH branding"
                         data-ar="<strong>الصفحة الرئيسية</strong> — قسم البطل مع أزرار تحميل App Store / Play Store وعلامة بيت الخياطة التجارية">
                         <strong>Homepage</strong> — Hero section with App Store / Play Store download buttons and BKH
-                        branding</li>
+                        branding
+                    </li>
                     <li data-en="<strong>Courses Carousel</strong> — A dynamic carousel showcasing available courses with categories, descriptions, and durations"
                         data-ar="<strong>كاروسيل الدورات</strong> — كاروسيل ديناميكي يعرض الدورات المتاحة مع الفئات والأوصاف والمدد">
                         <strong>Courses Carousel</strong> — A dynamic carousel showcasing available courses with
-                        categories, descriptions, and durations</li>
+                        categories, descriptions, and durations
+                    </li>
                     <li data-en="<strong>Courses Page</strong> — Course listing with popularity ranking, levels, session count, and gamification features (ranks & badges)"
                         data-ar="<strong>صفحة الدورات</strong> — قائمة الدورات مع ترتيب الشعبية والمستويات وعدد الجلسات وميزات التلعيب (الرتب والشارات)">
                         <strong>Courses Page</strong> — Course listing with popularity ranking, levels, session count,
-                        and gamification features (ranks & badges)</li>
+                        and gamification features (ranks & badges)
+                    </li>
                     <li data-en="<strong>Footer</strong> — Social media links (Facebook, Instagram, TikTok, YouTube), contact info, and quick navigation"
                         data-ar="<strong>التذييل</strong> — روابط وسائل التواصل الاجتماعي (فيسبوك، إنستغرام، تيك توك، يوتيوب)، معلومات الاتصال، والتنقل السريع">
                         <strong>Footer</strong> — Social media links (Facebook, Instagram, TikTok, YouTube), contact
-                        info, and quick navigation</li>
+                        info, and quick navigation
+                    </li>
                 </ul>
                 <br>
                 <p data-en="<em>Note: Some website customizations may appear irrelevant to Odoo's default behavior as they were specifically tailored for the client's mobile application requirements.</em>"
@@ -1083,6 +1183,69 @@
                             contacts & quick navigation</span>
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ═══════════════ UPCOMING TASKS ═══════════════ -->
+    <section id="upcoming">
+        <div class="reveal">
+            <span class="section-label" data-en="Roadmap" data-ar="خارطة الطريق">Roadmap</span>
+            <h2 class="section-title" data-en="Upcoming Tasks" data-ar="المهام القادمة">Upcoming Tasks</h2>
+            <p class="section-desc"
+                data-en="The following tasks are planned for the next phase once work resumes on the BKH Online Cycle project."
+                data-ar="المهام التالية مخططة للمرحلة القادمة عند استئناف العمل على مشروع الدورة أونلاين لبيت الخياطة.">
+                The following tasks are planned for the next phase once work resumes on the BKH Online Cycle project.
+            </p>
+        </div>
+
+        <div class="roadmap-grid">
+            <!-- Task 1 -->
+            <div class="roadmap-card reveal">
+                <div class="roadmap-num">01</div>
+                <h4 data-en="Enhance Website for Production" data-ar="تحسين الموقع للإنتاج">Enhance Website for
+                    Production</h4>
+                <p data-en="Optimize and refine the website to be fully production-ready — including performance improvements, SEO optimization, and ensuring all pages are polished for a live environment."
+                    data-ar="تحسين وتنقيح الموقع الإلكتروني ليكون جاهزاً للإنتاج بالكامل — بما في ذلك تحسينات الأداء، تحسين محركات البحث، والتأكد من أن جميع الصفحات مصقولة لبيئة حية.">
+                    Optimize and refine the website to be fully production-ready — including performance improvements,
+                    SEO optimization, and ensuring all pages are polished for a live environment.
+                </p>
+            </div>
+
+            <!-- Task 2 -->
+            <div class="roadmap-card reveal">
+                <div class="roadmap-num">02</div>
+                <h4 data-en="Add Courses Slider" data-ar="إضافة شريط تمرير الدورات">Add Courses Slider</h4>
+                <p data-en="Implement a dynamic slider/carousel on the website that displays available courses. Currently, this feature is only available for products — it needs to be extended to support courses as well."
+                    data-ar="تنفيذ شريط تمرير/كاروسيل ديناميكي على الموقع يعرض الدورات المتاحة. حالياً، هذه الميزة متاحة فقط للمنتجات — يجب توسيعها لدعم الدورات أيضاً.">
+                    Implement a dynamic slider/carousel on the website that displays available courses. Currently, this
+                    feature is only available for products — it needs to be extended to support courses as well.
+                </p>
+            </div>
+
+            <!-- Task 3 -->
+            <div class="roadmap-card reveal">
+                <div class="roadmap-num">03</div>
+                <h4 data-en="Forum & Community Setup" data-ar="إعداد المنتدى والمجتمع">Forum & Community Setup</h4>
+                <p data-en="Utilize the Odoo Forum module to build a community section. Enhance and configure it to be production-ready with proper categories, moderation, and user engagement features for the BKH learners."
+                    data-ar="استخدام وحدة المنتدى في أودو لبناء قسم المجتمع. تحسينه وتكوينه ليكون جاهزاً للإنتاج مع فئات مناسبة وإشراف وميزات تفاعل المستخدمين لمتعلمي بيت الخياطة.">
+                    Utilize the Odoo Forum module to build a community section. Enhance and configure it to be
+                    production-ready with proper categories, moderation, and user engagement features for the BKH
+                    learners.
+                </p>
+            </div>
+
+            <!-- Task 4 -->
+            <div class="roadmap-card reveal">
+                <div class="roadmap-num">04</div>
+                <h4 data-en="Payment Gateway Integration" data-ar="تكامل بوابة الدفع">Payment Gateway Integration</h4>
+                <p data-en="Integrate a payment gateway so clients can pay for courses online directly through the website. This includes configuring payment providers, testing transactions, and ensuring a secure checkout flow."
+                    data-ar="تكامل بوابة دفع حتى يتمكن العملاء من الدفع للدورات عبر الإنترنت مباشرة من خلال الموقع. يشمل ذلك تكوين مزودي الدفع واختبار المعاملات وضمان تدفق دفع آمن.">
+                    Integrate a payment gateway so clients can pay for courses online directly through the website. This
+                    includes configuring payment providers, testing transactions, and ensuring a secure checkout flow.
+                </p>
             </div>
         </div>
     </section>
